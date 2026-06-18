@@ -8,8 +8,10 @@ from app.models import User
 from app.models import Note
 
 from app.core.security import hash_password
+from app.api.auth import router as auth_router
 
 app = FastAPI()
+app.include_router(auth_router)
 
 @app.get("/")
 def root():
