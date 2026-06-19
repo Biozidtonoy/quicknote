@@ -9,6 +9,9 @@ from app.models import User
 from app.schemas.user import UserCreate
 from app.core.security import hash_password
 
+from app.schemas.user import UserLogin
+from app.core.security import verify_password
+
 router = APIRouter(
     prefix="/auth",
     tags=["Authentication"]
@@ -46,4 +49,33 @@ def register(user_data: UserCreate,db: Session = Depends(get_db)):
     "id": new_user.id,
     "name": new_user.name,
     "email": new_user.email
+    }
+
+
+@router.post("/login")
+def login(user_data: UserLogin,db: Session = Depends(get_db)):
+    user = (
+    db.query(User)
+    .filter(User.email == user_data.email)
+    .first()
+    )
+
+    if not user:
+        raise HTTPException(
+            status_code=401,
+            detail="Invalid email or password"
+        )
+    
+    if not verify_password(
+    user_data.password,
+    user.password_hash
+    ):
+        raise HTTPException(
+            status_code=401,
+            detail="Invalid email or password"
+        )
+    
+    return {
+        "message": "Login successful",
+        "user_id": user.id
     }
