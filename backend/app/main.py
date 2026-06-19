@@ -10,6 +10,8 @@ from app.models import Note
 from app.core.security import hash_password
 from app.api.auth import router as auth_router
 
+from app.core.security import create_access_token
+
 app = FastAPI()
 app.include_router(auth_router)
 
@@ -27,4 +29,18 @@ def db_health():
 def test_hash():
     return {
         "hash": hash_password("123456")
+    }
+
+from app.core.security import create_access_token
+
+@app.get("/token")
+def token_test():
+    token = create_access_token(
+        {
+            "sub":"mahfuz@gmail.com"
+        }
+    )
+
+    return {
+        "token": token
     }
