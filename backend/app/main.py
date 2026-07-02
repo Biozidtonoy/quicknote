@@ -12,8 +12,11 @@ from app.api.auth import router as auth_router
 
 from app.core.security import create_access_token
 
+from app.api.users import router as users_router
+
 app = FastAPI()
 app.include_router(auth_router)
+app.include_router(users_router)
 
 @app.get("/")
 def root():
