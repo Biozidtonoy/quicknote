@@ -14,9 +14,17 @@ from app.core.security import create_access_token
 
 from app.api.users import router as users_router
 
+from fastapi.staticfiles import StaticFiles
+
 app = FastAPI()
 app.include_router(auth_router)
 app.include_router(users_router)
+
+app.mount(
+    "/uploads",
+    StaticFiles(directory="uploads"),
+    name="uploads"
+)
 
 @app.get("/")
 def root():
