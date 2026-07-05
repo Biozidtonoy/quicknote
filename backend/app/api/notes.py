@@ -1,5 +1,6 @@
 from fastapi import APIRouter
 from fastapi import Depends
+from fastapi import HTTPException
 
 from sqlalchemy.orm import Session
 
@@ -12,6 +13,8 @@ from app.schemas.note import NoteCreate
 from app.schemas.note import NoteResponse
 
 from app.core.security import get_current_user
+
+
 
 router = APIRouter(
     prefix = "/notes",
@@ -75,3 +78,44 @@ def get_notes(
     )
 
     return notes
+
+# create single note api 
+@router.get("/{note_id}", response_model=NoteResponse)
+def get_note(
+
+    note_id: int,
+
+    current_user: User = Depends(
+        get_current_user
+    ),
+
+    db: Session = Depends(
+        get_db
+    )
+):
+    note = (
+
+    db.query(Note)
+
+    .filter(
+
+        Note.id == note_id,
+
+        Note.owner_id == current_user.id
+
+    )
+
+    .first()
+
+)
+    if note is None:
+
+        raise HTTPException(
+
+        status_code=404,
+
+        detail="Note not found"
+
+    )
+    
+    return note
