@@ -14,6 +14,19 @@ class NoteCreate(BaseModel):
         min_length=1
     )
 
+from pydantic import BaseModel, Field
+
+class NoteUpdate(BaseModel):
+
+    title: str = Field(
+        min_length=1,
+        max_length=100
+    )
+
+    content: str = Field(
+        min_length=1
+    )
+
 class NoteResponse(BaseModel):
 
     id: int
@@ -27,3 +40,5 @@ class NoteResponse(BaseModel):
     model_config = {
     "from_attributes": True
     }
+
+
