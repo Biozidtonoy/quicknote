@@ -1,6 +1,7 @@
 from fastapi import APIRouter
 from fastapi import Depends
 from fastapi import HTTPException
+from sqlalchemy import or_
 
 from sqlalchemy.orm import Session
 
@@ -79,6 +80,43 @@ def get_notes(
 
     return notes
 
+# search notes api endpoint 
+@router.get("/search",response_model=list[NoteResponse])
+def search_notes(
+    q : str,
+
+    current_user: User = Depends(
+        get_current_user
+    ),
+
+    db: Session = Depends(
+        get_db
+    )
+):
+    notes = (
+
+    db.query(Note)
+
+    .filter(
+
+        Note.owner_id == current_user.id,
+
+        or_(
+
+            Note.title.ilike(f"%{q}%"),
+
+            Note.content.ilike(f"%{q}%")
+
+        )
+
+    )
+
+    .all()
+
+)
+    
+    return notes
+
 # create single note api 
 @router.get("/{note_id}", response_model=NoteResponse)
 def get_note(
@@ -119,3 +157,4 @@ def get_note(
     )
     
     return note
+
