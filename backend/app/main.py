@@ -8,17 +8,21 @@ from app.models import User
 from app.models import Note
 
 from app.core.security import hash_password
-from app.api.auth import router as auth_router
-
 from app.core.security import create_access_token
 
+from app.api.auth import router as auth_router
 from app.api.users import router as users_router
+from app.api.notes import router as notes_router
+
+
+
 
 from fastapi.staticfiles import StaticFiles
 
 app = FastAPI()
 app.include_router(auth_router)
 app.include_router(users_router)
+app.include_router(notes_router)
 
 app.mount(
     "/uploads",
