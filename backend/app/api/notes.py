@@ -18,6 +18,7 @@ router = APIRouter(
     tags = ["Notes"]
 )
 
+# create note api endpoint
 @router.post("",response_model=NoteResponse)
 def create_note(
     note_data: NoteCreate,
@@ -47,3 +48,30 @@ def create_note(
     db.refresh(new_note)
 
     return new_note
+
+
+# get all notes api endpoint 
+@router.get("",response_model=list[NoteResponse])
+def get_notes(
+    current_user: User = Depends(
+        get_current_user
+    ),
+
+    db: Session = Depends(
+        get_db
+    )
+
+):
+    notes = (
+
+        db.query(Note)
+
+        .filter(
+            Note.owner_id == current_user.id
+        )
+
+        .all()
+
+    )
+
+    return notes
