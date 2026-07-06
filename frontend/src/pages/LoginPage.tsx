@@ -1,15 +1,29 @@
 import { useState } from "react";
 import "../styles/loginpage.css";
 
+import {login} from "../api/auth";
+
 function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault();
+async function handleSubmit(
+  event: React.FormEvent<HTMLFormElement>
+) {
+  event.preventDefault();
 
-    console.log({email,password,});
+  try {
+    const data = await login(
+      email,
+      password
+    );
+
+    console.log(data);
+
+  } catch (error) {
+    console.error(error);
   }
+}
 
   return (
     <div className="login-container">
