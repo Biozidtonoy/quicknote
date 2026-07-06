@@ -1,6 +1,8 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy import text
+from fastapi import Request
+from fastapi.responses import JSONResponse
 
 from app.database import Base
 from app.database import engine
@@ -20,6 +22,18 @@ from fastapi.staticfiles import StaticFiles
 
 
 app = FastAPI()
+
+@app.exception_handler(Exception)
+def global_exception_handler(
+    request: Request,
+    exc: Exception
+):
+    return JSONResponse(
+        status_code=500,
+        content={
+            "message": "Something went wrong"
+        }
+    )
 
 app.add_middleware(
 
