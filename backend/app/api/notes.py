@@ -211,3 +211,35 @@ def update_note(
     db.refresh(note)
 
     return note
+
+# delete note api 
+
+@router.delete("/{note_id}")
+def delete_note(
+    note_id : int,
+
+    current_user : User = Depends(get_current_user),
+    db : Session = Depends(get_db)
+):
+    note = (
+        db.query(Note)
+        .filter(
+            Note.id == note_id,
+            Note.owner_id == current_user.id
+        )
+
+        .first()
+    )
+
+    if note is None:
+        raise HTTPException(
+            status_code=404,
+            detail="Note not found"
+        )
+
+    db.delete(note)
+    db.commit()
+
+    return {
+        "message" : "Note deleted successfully"
+    }
