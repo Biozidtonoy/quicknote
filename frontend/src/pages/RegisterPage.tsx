@@ -1,7 +1,8 @@
-import "../styles/loginpage.css";
+import "../styles/auth.css";
 import { useState } from "react";
 import {register} from "../api/auth";
 import axios from "axios";
+import { Link } from "react-router";
 
 function RegisterPage() {
   const [name, setName] = useState("");
@@ -79,7 +80,9 @@ function RegisterPage() {
 
         <p className="register-text">
           Already have an account?
-          <span> Login</span>
+          <Link to="/login">
+          login
+          </Link>
         </p>
       </div>
     </div>
