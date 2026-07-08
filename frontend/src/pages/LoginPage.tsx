@@ -1,30 +1,55 @@
 import { useState } from "react";
 import "../styles/loginpage.css";
-
 import {login} from "../api/auth";
+import axios from "axios";
+import { saveToken, getToken } from "../services/authStorage";
 
 function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
 
 async function handleSubmit(
   event: React.FormEvent<HTMLFormElement>
 ) {
   event.preventDefault();
+  setError("");
 
   try {
     const data = await login(
       email,
       password
     );
+    
+    saveToken(
+    data.access_token
+    );
 
+  const token = getToken();
+
+  if (!token) {
+    console.log("User is not logged in.");
+  } else {
+    console.log("User is logged in.");
+  }
+
+    console.log("Login successful!");
     console.log(data);
 
-  } catch (error) {
-    console.error(error);
+  } 
+  catch (error) {
+
+    if (axios.isAxiosError(error)) {
+        setError(
+          error.response?.data?.detail ??
+          "Login failed. Please try again."
+        );
+    }
+    else {
+        setError("Something went wrong.");
+    }
   }
 }
-
   return (
     <div className="login-container">
       <div className="login-card">
@@ -35,6 +60,7 @@ async function handleSubmit(
         </div>
 
         <form onSubmit={handleSubmit} className="login-form">
+          {error && <p className="error-message">{error}</p>}
           <div className="form-group">
             <label>Email</label>
 
