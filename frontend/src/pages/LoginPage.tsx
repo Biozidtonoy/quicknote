@@ -3,6 +3,7 @@ import "../styles/loginpage.css";
 import {login} from "../api/auth";
 import axios from "axios";
 import { saveToken, getToken } from "../services/authStorage";
+import { Link } from "react-router";
 
 function LoginPage() {
   const [email, setEmail] = useState("");
@@ -88,7 +89,9 @@ async function handleSubmit(
 
         <p className="register-text">
           Don't have an account?
-          <span> Register</span>
+          <Link to = "/register">
+          Register
+          </Link>
         </p>
       </div>
     </div>
