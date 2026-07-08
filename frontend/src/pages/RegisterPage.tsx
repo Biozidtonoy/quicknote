@@ -1,4 +1,4 @@
-import "../styles/loginpage.css";
+import "../styles/auth.css";
 import { useState } from "react";
 import {register} from "../api/auth";
 import axios from "axios";

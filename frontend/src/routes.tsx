@@ -1,11 +1,13 @@
 // import path from "path";
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
+import DashboardPage from "./pages/DashboardPage";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 const routes = [
   {
     path: "/",
-    element: <LoginPage />,
+    element: <LoginPage/>,
   },
   {
     path: "/login",
@@ -14,6 +16,14 @@ const routes = [
   {
     path: "/register",
     element: <RegisterPage />,
+  },
+  {
+    path: "/dashboard",
+    element: (
+      <ProtectedRoute>
+        <DashboardPage />
+      </ProtectedRoute>
+    ),
   },
 ];
 

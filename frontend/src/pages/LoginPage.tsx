@@ -1,14 +1,17 @@
 import { useState } from "react";
-import "../styles/loginpage.css";
+import "../styles/auth.css";
 import {login} from "../api/auth";
 import axios from "axios";
 import { saveToken, getToken } from "../services/authStorage";
 import { Link } from "react-router";
+import { useNavigate } from "react-router";
 
 function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+
+  const navigate = useNavigate();
 
 async function handleSubmit(
   event: React.FormEvent<HTMLFormElement>
@@ -27,6 +30,7 @@ async function handleSubmit(
     );
 
   const token = getToken();
+  navigate("/dashboard");
 
   if (!token) {
     console.log("User is not logged in.");

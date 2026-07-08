@@ -1,11 +1,13 @@
-// import LoginPage from "./pages/LoginPage"
+import LoginPage from "./pages/LoginPage"
 import RegisterPage from "./pages/RegisterPage"
+import DashboardPage from "./pages/DashboardPage"
 
 function App() {
   return (
     <>
-    {/* <LoginPage/> */}
+    <LoginPage/>
     <RegisterPage/>
+    <DashboardPage/>
     </>
   )
 }
