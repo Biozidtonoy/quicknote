@@ -16,3 +16,20 @@ export async function login(
 
   return response.data;
 }
+
+export async function register(
+  name : string,
+  email : string,
+  password : string
+){
+  const response = await api.post(
+    "/auth/register",
+    {
+      name,
+      email,
+      password
+    }
+  );
+
+  return response.data;
+}
