@@ -2,11 +2,9 @@ import { useEffect, useState } from "react";
 import "../styles/dashboard.css";
 import { Menu, X } from "lucide-react";
 import { useNavigate } from "react-router";
-
 import { removeToken } from "../services/authStorage";
 import { getNotes } from "../api/note";
 import type { Note } from "../api/note";
-
 import CreateNoteForm from "../components/CreateNoteform";
 import NotesList from "../components/NoteList";
 
@@ -79,7 +77,7 @@ function DashboardPage() {
           onNoteCreated={fetchNotes}
         />
 
-        <NotesList notes={notes} />
+        <NotesList notes={notes} onNoteUpdated={fetchNotes} />
       </div>
     </div>
   );

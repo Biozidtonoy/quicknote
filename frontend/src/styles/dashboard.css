@@ -24,14 +24,14 @@
   border: none;
   border-radius: 8px;
   cursor: pointer;
-  background: #2563eb;
+  background: #6B7280;
   color: white;
   font-weight: 600;
   transition: 0.2s;
 }
 
 .dashboard-header button:hover {
-  background: #24499b;
+  background: #4B5563;
 }
 
 .welcome-section {

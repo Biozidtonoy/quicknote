@@ -6,6 +6,11 @@ type CreateNoteRequest = {
   content: string;
 };
 
+type UpdateNoteRequest = {
+  title: string;
+  content: string;
+};
+
 export type Note = {
   id: number;
   title: string;
@@ -36,6 +41,25 @@ export async function getNotes() {
 
   const response = await api.get(
     "/notes",
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+
+  return response.data;
+}
+
+export async function updateNote(
+  noteId: number,
+  note: UpdateNoteRequest
+) {
+  const token = getToken();
+
+  const response = await api.put(
+    `/notes/${noteId}`,
+    note,
     {
       headers: {
         Authorization: `Bearer ${token}`,

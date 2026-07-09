@@ -1,38 +1,29 @@
 import "../styles/note.css";
 import type { Note } from "../api/note";
+import NoteCard from "./NoteCard";
 type NotesListProps = {
-
-    notes: Note[];
-
+  notes: Note[];
+  onNoteUpdated: () => void;
 };
 
-function NotesList({notes} : NotesListProps) {
+function NotesList({ notes, onNoteUpdated,}: NotesListProps) {
+  return (
+    <section className="notes-list">
+      <h2>Recent Notes</h2>
 
-
-return (
-  <section className="notes-list">
-    <h2>Recent Notes</h2>
-
-    {notes.length === 0 ? (
-      <div className="empty-notes">
-        <p>No notes available.</p>
-      </div>
-    ) : (
-      <div className="notes-grid">
-        {notes.map((note) => (
-          <div
-            key={note.id}
-            className="note-card"
-          >
-            <h3 className="font-bold">{note.title}</h3>
-
-            <p>{note.content}</p>
-          </div>
-        ))}
-      </div>
-    )}
-  </section>
-);
+      {notes.length === 0 ? (
+        <div className="empty-notes">
+          <p>No notes available.</p>
+        </div>
+      ) : (
+        <div className="notes-grid">
+          {notes.map((note) => (
+            <NoteCard key={note.id} note={note} onNoteUpdated={onNoteUpdated} />
+          ))}
+        </div>
+      )}
+    </section>
+  );
 }
 
 export default NotesList;
