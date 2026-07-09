@@ -217,3 +217,36 @@
 .delete-button:hover {
   background: #b91c1c;
 }
+
+.cancel-button {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+
+  padding: 8px 14px;
+
+  border: none;
+  border-radius: 8px;
+
+  background: #6b7280;
+  color: white;
+
+  cursor: pointer;
+
+  transition: 0.2s;
+}
+
+.cancel-button:hover {
+  background: #4b5563;
+}
+
+.delete-warning {
+  flex: 1;
+
+  color: #dc2626;
+
+  font-weight: 600;
+
+  display: flex;
+  align-items: center;
+}

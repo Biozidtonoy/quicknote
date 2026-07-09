@@ -69,3 +69,20 @@ export async function updateNote(
 
   return response.data;
 }
+
+export async function deleteNote(
+  noteId: number
+) {
+  const token = getToken();
+
+  const response = await api.delete(
+    `/notes/${noteId}`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+
+  return response.data;
+}
