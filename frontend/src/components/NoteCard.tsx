@@ -1,7 +1,9 @@
 import { useState } from "react";
 import { Pencil, Trash2 } from "lucide-react";
-import { updateNote } from "../api/note";
+
+import { updateNote, deleteNote } from "../api/note";
 import type { Note } from "../api/note";
+
 import "../styles/note.css";
 
 type NoteCardProps = {
@@ -12,16 +14,24 @@ type NoteCardProps = {
 function NoteCard({ note, onNoteUpdated }: NoteCardProps) {
   const [isEditing, setIsEditing] = useState(false);
 
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+
   const [title, setTitle] = useState(note.title);
+
   const [content, setContent] = useState(note.content);
+
+  const [deleteError, setDeleteError] = useState("");
+
   const handleSave = async () => {
     if (!title.trim() || !content.trim()) {
       return;
     }
-     if (title === note.title && content === note.content) {
-       setIsEditing(false);
-       return;
-     }
+
+    if (title === note.title && content === note.content) {
+      setIsEditing(false);
+      return;
+    }
+
     try {
       await updateNote(note.id, {
         title,
@@ -35,6 +45,21 @@ function NoteCard({ note, onNoteUpdated }: NoteCardProps) {
       console.error(error);
     }
   };
+
+  const handleDelete = async () => {
+    try {
+      setDeleteError("");
+      await deleteNote(note.id);
+
+      setShowDeleteConfirm(false);
+
+      onNoteUpdated();
+    } catch (error) {
+      console.error(error);
+      setDeleteError("Failed to delete the note.");
+    }
+  };
+
   return (
     <div className="note-card">
       {isEditing ? (
@@ -71,16 +96,12 @@ function NoteCard({ note, onNoteUpdated }: NoteCardProps) {
 
       {isEditing ? (
         <div className="note-actions">
-          <button
-            className="edit-button"
-            // We'll implement this in Part 4
-            onClick={handleSave}
-          >
+          <button className="edit-button" onClick={handleSave}>
             Save
           </button>
 
           <button
-            className="delete-button"
+            className="cancel-button"
             onClick={() => {
               setTitle(note.title);
               setContent(note.content);
@@ -90,6 +111,27 @@ function NoteCard({ note, onNoteUpdated }: NoteCardProps) {
             Cancel
           </button>
         </div>
+      ) : showDeleteConfirm ? (
+        <>
+          <div className="note-actions">
+            <span className="delete-warning">Delete this note?</span>
+
+            <button
+              className="cancel-button"
+              onClick={() => {
+                setDeleteError("");
+                setShowDeleteConfirm(false);
+              }}
+            >
+              Cancel
+            </button>
+
+            <button className="delete-button" onClick={handleDelete}>
+              Delete
+            </button>
+          </div>
+          {deleteError && <p className="error-message">{deleteError}</p>}
+        </>
       ) : (
         <div className="note-actions">
           <button className="edit-button" onClick={() => setIsEditing(true)}>
@@ -97,10 +139,17 @@ function NoteCard({ note, onNoteUpdated }: NoteCardProps) {
             Edit
           </button>
 
-          <button className="delete-button">
+          <button
+            className="delete-button"
+            onClick={() => {
+              setDeleteError("");
+              setShowDeleteConfirm(true);
+            }}
+          >
             <Trash2 size={18} />
             Delete
           </button>
+          {deleteError && <p className="error-message">{deleteError}</p>}
         </div>
       )}
     </div>
