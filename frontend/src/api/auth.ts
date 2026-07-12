@@ -5,6 +5,7 @@ export type CurrentUser = {
   id: number;
   name: string;
   email: string;
+  profile_image: string | null;
 };
 
 export async function getCurrentUser() {
@@ -15,6 +16,26 @@ export async function getCurrentUser() {
       Authorization: `Bearer ${token}`,
     },
   });
+
+  return response.data;
+}
+
+export async function uploadProfileImage(file: File) {
+  const token = getToken();
+
+  const formData = new FormData();
+
+  formData.append("image", file);
+
+  const response = await api.post(
+    "/users/profile-image",
+    formData,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
 
   return response.data;
 }
