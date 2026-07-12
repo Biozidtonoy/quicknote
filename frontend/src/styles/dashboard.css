@@ -160,3 +160,33 @@
     background: #f3f4f6;
   }
 }
+
+.search-section {
+  margin: 24px 0;
+}
+
+.search-box {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  background: white;
+
+  padding: 12px 16px;
+
+  border-radius: 10px;
+
+  border: 1px solid #d1d5db;
+}
+
+.search-box input {
+  width: 100%;
+
+  border: none;
+
+  outline: none;
+
+  font-size: 1rem;
+
+  background: transparent;
+}
