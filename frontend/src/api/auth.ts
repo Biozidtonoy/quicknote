@@ -1,4 +1,23 @@
 import api from "./axios";
+import { getToken } from "../services/authStorage";
+
+export type CurrentUser = {
+  id: number;
+  name: string;
+  email: string;
+};
+
+export async function getCurrentUser() {
+  const token = getToken();
+
+  const response = await api.get("/users/me", {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  return response.data;
+}
 
 export async function login(
   email: string,
