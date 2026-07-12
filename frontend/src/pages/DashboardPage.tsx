@@ -10,6 +10,7 @@ import NotesList from "../components/NoteList";
 import { Search } from "lucide-react";
 import { getCurrentUser } from "../api/auth";
 import type { CurrentUser } from "../api/auth";
+import UserProfile from "../components/UserProfile";
 
 function DashboardPage() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -84,14 +85,10 @@ function DashboardPage() {
         )}
       </header>
 
-      <section className="welcome-section">
-        <h2>
-          Welcome Back
-          {currentUser ? `, ${currentUser.name}` : ""}
-        </h2>
-
-        <p>Manage your personal notes from one place.</p>
-      </section>
+      <UserProfile name={currentUser?.name ?? "User"}
+        profileImage={currentUser?.profile_image ?? null}
+        onProfileUpdated={fetchCurrentUser}
+       />
 
       <section className="search-section">
         <div className="search-box">
