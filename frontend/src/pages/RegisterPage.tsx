@@ -1,24 +1,41 @@
 import "../styles/auth.css";
 import { useState } from "react";
-import {register} from "../api/auth";
+import { register } from "../api/auth";
 import axios from "axios";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 
 function RegisterPage() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
+  const navigate = useNavigate();
+
   const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
     try {
       const data = await register(name, email, password);
-      setError("");
+
       console.log(data);
+
+      setError("");
+
+      setSuccess("Registration successful! Redirecting to login...");
+
+      setName("");
+      setEmail("");
+      setPassword("");
+
+      setTimeout(() => {
+        navigate("/login");
+      }, 1500);
     } catch (error) {
+      setSuccess("");
+
       if (axios.isAxiosError(error)) {
         setError(
           error.response?.data?.detail ??
@@ -40,7 +57,7 @@ function RegisterPage() {
         </div>
 
         <form className="login-form" onSubmit={handleSubmit}>
-
+          {success && <p className="success-message">{success}</p>}
           {error && <p className="error-message">{error}</p>}
 
           <div className="form-group">
@@ -80,9 +97,7 @@ function RegisterPage() {
 
         <p className="register-text">
           Already have an account?
-          <Link to="/login">
-          login
-          </Link>
+          <Link to="/login">login</Link>
         </p>
       </div>
     </div>
