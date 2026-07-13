@@ -1,7 +1,7 @@
 [project]
-name = "backend"
+name = "quicknote"
 version = "0.1.0"
-description = "Add your description here"
+description = "A full-stack note-taking application built with FastAPI, React, and PostgreSQL."
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
