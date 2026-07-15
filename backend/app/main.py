@@ -18,7 +18,7 @@ from app.api.users import router as users_router
 from app.api.notes import router as notes_router
 
 from fastapi.staticfiles import StaticFiles
-
+from app.core.config import FRONTEND_URL
 
 
 app = FastAPI()
@@ -41,7 +41,8 @@ app.add_middleware(
 
     allow_origins=[
 
-        "http://localhost:5173"
+        "http://localhost:5173",
+        FRONTEND_URL,
 
     ],
 
@@ -65,7 +66,10 @@ app.mount(
 
 @app.get("/")
 def root():
-    return {"message": "QuickNote API"}
+    return {
+        "message": "QuickNote API is running 🚀",
+        "docs": "/docs"
+    }
 
 @app.get("/health/db")
 def db_health():
