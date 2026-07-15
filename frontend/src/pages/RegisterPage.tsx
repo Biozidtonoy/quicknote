@@ -17,30 +17,66 @@ function RegisterPage() {
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
+    setError("");
+    setSuccess("");
+
+    if (!name.trim()) {
+      setError("Name is required.");
+      return;
+    }
+
+    if (!email.trim()) {
+      setError("Email is required.");
+      return;
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (!emailRegex.test(email)) {
+      setError("Please enter a valid email address.");
+      return;
+    }
+
+    if (!password.trim()) {
+      setError("Password is required.");
+      return;
+    }
+
+    if (password.length < 6) {
+      setError("Password must be at least 6 characters.");
+      return;
+    }
+
     try {
-      const data = await register(name, email, password);
-
-      console.log(data);
-
-      setError("");
-
-      setSuccess("Registration successful! Redirecting to login...");
+      await register(
+        name.trim(),
+        email.trim().toLowerCase(),
+        password
+      );
 
       setName("");
       setEmail("");
       setPassword("");
 
+      setSuccess("Registration successful! Redirecting to login...");
+
       setTimeout(() => {
         navigate("/login");
       }, 1500);
+
     } catch (error) {
       setSuccess("");
 
       if (axios.isAxiosError(error)) {
-        setError(
-          error.response?.data?.detail ??
-            "Registration failed. Please try again.",
-        );
+        const detail = error.response?.data?.detail;
+
+        if (typeof detail === "string") {
+          setError(detail);
+        } else if (Array.isArray(detail) && detail.length > 0) {
+          setError(detail[0].msg);
+        } else {
+          setError("Registration failed. Please try again.");
+        }
       } else {
         setError("Something went wrong.");
       }
@@ -62,6 +98,7 @@ function RegisterPage() {
 
           <div className="form-group">
             <label>Name</label>
+
             <input
               type="text"
               placeholder="Enter your name"
@@ -97,7 +134,7 @@ function RegisterPage() {
 
         <p className="register-text">
           Already have an account?
-          <Link to="/login">login</Link>
+          <Link to="/login"> Login</Link>
         </p>
       </div>
     </div>
