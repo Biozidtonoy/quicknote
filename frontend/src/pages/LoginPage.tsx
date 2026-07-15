@@ -1,30 +1,63 @@
 import { useState } from "react";
-import "../styles/loginpage.css";
-
-import {login} from "../api/auth";
+import "../styles/auth.css";
+import { login } from "../api/auth";
+import axios from "axios";
+import { saveToken, getToken } from "../services/authStorage";
+import { Link } from "react-router";
+import { useNavigate } from "react-router";
 
 function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
 
-async function handleSubmit(
-  event: React.FormEvent<HTMLFormElement>
-) {
-  event.preventDefault();
+  const navigate = useNavigate();
 
-  try {
-    const data = await login(
-      email,
-      password
-    );
+  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    setError("");
 
-    console.log(data);
+    try {
+      const data = await login(email, password);
 
-  } catch (error) {
-    console.error(error);
+      saveToken(data.access_token);
+
+      const token = getToken();
+      navigate("/dashboard");
+      if (!email.trim()) {
+        setError("Email is required.");
+        return;
+      }
+
+      if (!password.trim()) {
+        setError("Password is required.");
+        return;
+      }
+
+      if (!token) {
+        console.log("User is not logged in.");
+      } else {
+        console.log("User is logged in.");
+      }
+
+      console.log("Login successful!");
+      console.log(data);
+    } catch (error: unknown) {
+      if (axios.isAxiosError(error)) {
+        const detail = error.response?.data?.detail;
+
+        if (typeof detail === "string") {
+          setError(detail);
+        } else if (Array.isArray(detail)) {
+          setError(detail[0]?.msg ?? "Login failed.");
+        } else {
+          setError("Login failed.");
+        }
+      } else {
+        setError("Something went wrong.");
+      }
+    }
   }
-}
-
   return (
     <div className="login-container">
       <div className="login-card">
@@ -35,6 +68,7 @@ async function handleSubmit(
         </div>
 
         <form onSubmit={handleSubmit} className="login-form">
+          {error && <p className="error-message">{error}</p>}
           <div className="form-group">
             <label>Email</label>
 
@@ -62,7 +96,7 @@ async function handleSubmit(
 
         <p className="register-text">
           Don't have an account?
-          <span> Register</span>
+          <Link to="/register">Register</Link>
         </p>
       </div>
     </div>

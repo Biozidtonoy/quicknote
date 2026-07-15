@@ -1,12 +1,15 @@
-import "../styles/loginpage.css";
+import "../styles/auth.css";
 import { useState } from "react";
 import { register } from "../api/auth";
 import axios from "axios";
+import { Link, useNavigate } from "react-router";
 
 function RegisterPage() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  const navigate = useNavigate();
 
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
@@ -17,13 +20,11 @@ function RegisterPage() {
     setError("");
     setSuccess("");
 
-    
     if (!name.trim()) {
       setError("Name is required.");
       return;
     }
 
-    
     if (!email.trim()) {
       setError("Email is required.");
       return;
@@ -36,7 +37,6 @@ function RegisterPage() {
       return;
     }
 
-    
     if (!password.trim()) {
       setError("Password is required.");
       return;
@@ -54,12 +54,19 @@ function RegisterPage() {
         password
       );
 
-      setSuccess("Registration successful! You can now log in.");
-
       setName("");
       setEmail("");
       setPassword("");
+
+      setSuccess("Registration successful! Redirecting to login...");
+
+      setTimeout(() => {
+        navigate("/login");
+      }, 1500);
+
     } catch (error) {
+      setSuccess("");
+
       if (axios.isAxiosError(error)) {
         const detail = error.response?.data?.detail;
 
@@ -86,13 +93,8 @@ function RegisterPage() {
         </div>
 
         <form className="login-form" onSubmit={handleSubmit}>
-          {success && (
-            <p className="success-message">{success}</p>
-          )}
-
-          {error && (
-            <p className="error-message">{error}</p>
-          )}
+          {success && <p className="success-message">{success}</p>}
+          {error && <p className="error-message">{error}</p>}
 
           <div className="form-group">
             <label>Name</label>
@@ -101,9 +103,7 @@ function RegisterPage() {
               type="text"
               placeholder="Enter your name"
               value={name}
-              onChange={(event) =>
-                setName(event.target.value)
-              }
+              onChange={(event) => setName(event.target.value)}
             />
           </div>
 
@@ -114,9 +114,7 @@ function RegisterPage() {
               type="email"
               placeholder="Enter your email"
               value={email}
-              onChange={(event) =>
-                setEmail(event.target.value)
-              }
+              onChange={(event) => setEmail(event.target.value)}
             />
           </div>
 
@@ -127,20 +125,16 @@ function RegisterPage() {
               type="password"
               placeholder="Enter your password"
               value={password}
-              onChange={(event) =>
-                setPassword(event.target.value)
-              }
+              onChange={(event) => setPassword(event.target.value)}
             />
           </div>
 
-          <button type="submit">
-            Register
-          </button>
+          <button type="submit">Register</button>
         </form>
 
         <p className="register-text">
           Already have an account?
-          <span> Login</span>
+          <Link to="/login"> Login</Link>
         </p>
       </div>
     </div>

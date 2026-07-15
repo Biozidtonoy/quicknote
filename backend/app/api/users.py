@@ -37,7 +37,8 @@ def read_current_user(
     return {
         "id": current_user.id,
         "name": current_user.name,
-        "email": current_user.email
+        "email": current_user.email,
+        "profile_image": current_user.profile_image
     }
 
 
