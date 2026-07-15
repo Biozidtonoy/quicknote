@@ -1,6 +1,6 @@
 import "../styles/loginpage.css";
 import { useState } from "react";
-import {register} from "../api/auth";
+import { register } from "../api/auth";
 import axios from "axios";
 
 function RegisterPage() {
@@ -9,20 +9,67 @@ function RegisterPage() {
   const [password, setPassword] = useState("");
 
   const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
+    setError("");
+    setSuccess("");
+
+    
+    if (!name.trim()) {
+      setError("Name is required.");
+      return;
+    }
+
+    
+    if (!email.trim()) {
+      setError("Email is required.");
+      return;
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (!emailRegex.test(email)) {
+      setError("Please enter a valid email address.");
+      return;
+    }
+
+    
+    if (!password.trim()) {
+      setError("Password is required.");
+      return;
+    }
+
+    if (password.length < 6) {
+      setError("Password must be at least 6 characters.");
+      return;
+    }
+
     try {
-      const data = await register(name, email, password);
-      setError("");
-      console.log(data);
+      await register(
+        name.trim(),
+        email.trim().toLowerCase(),
+        password
+      );
+
+      setSuccess("Registration successful! You can now log in.");
+
+      setName("");
+      setEmail("");
+      setPassword("");
     } catch (error) {
       if (axios.isAxiosError(error)) {
-        setError(
-          error.response?.data?.detail ??
-            "Registration failed. Please try again.",
-        );
+        const detail = error.response?.data?.detail;
+
+        if (typeof detail === "string") {
+          setError(detail);
+        } else if (Array.isArray(detail) && detail.length > 0) {
+          setError(detail[0].msg);
+        } else {
+          setError("Registration failed. Please try again.");
+        }
       } else {
         setError("Something went wrong.");
       }
@@ -39,16 +86,24 @@ function RegisterPage() {
         </div>
 
         <form className="login-form" onSubmit={handleSubmit}>
+          {success && (
+            <p className="success-message">{success}</p>
+          )}
 
-          {error && <p className="error-message">{error}</p>}
+          {error && (
+            <p className="error-message">{error}</p>
+          )}
 
           <div className="form-group">
             <label>Name</label>
+
             <input
               type="text"
               placeholder="Enter your name"
               value={name}
-              onChange={(event) => setName(event.target.value)}
+              onChange={(event) =>
+                setName(event.target.value)
+              }
             />
           </div>
 
@@ -59,7 +114,9 @@ function RegisterPage() {
               type="email"
               placeholder="Enter your email"
               value={email}
-              onChange={(event) => setEmail(event.target.value)}
+              onChange={(event) =>
+                setEmail(event.target.value)
+              }
             />
           </div>
 
@@ -70,11 +127,15 @@ function RegisterPage() {
               type="password"
               placeholder="Enter your password"
               value={password}
-              onChange={(event) => setPassword(event.target.value)}
+              onChange={(event) =>
+                setPassword(event.target.value)
+              }
             />
           </div>
 
-          <button type="submit">Register</button>
+          <button type="submit">
+            Register
+          </button>
         </form>
 
         <p className="register-text">
